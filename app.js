@@ -49,7 +49,7 @@ d3.csv("data.csv").then(function (stateData) {
         .attr("transform", `translate(0, ${height})`)
         .call(bottomAxis);
 
-    chartGroup.append("g")
+    chartGroup.append("scatter")
         .call(leftAxis);
     
     // Create circles
@@ -64,7 +64,7 @@ d3.csv("data.csv").then(function (stateData) {
     .attr("opacity", ".5");    
 
     // Initialize tooltip
-    var toolTip = d3.tip()
+    var toolTip = d3.toolTip()
         .attr("class", "tooltip")
         .offset([80, -60])
         .html(function(d) {
