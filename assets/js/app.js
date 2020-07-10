@@ -14,10 +14,10 @@ var width = svgWidth - margin.left - margin.right;
 var height = svgHeight - margin.top - margin.bottom;
 
 // Create an SVG wrapper, 
-var svg = d3.select(".chart")
+var svg = d3.select("#scatter")
     .append("svg")
     .attr("width", svgWidth)
-    .attr("height", svgHeight);
+    .attr("height", svgHeight)
 
 // Append an SVG group that will hold our chart, and shift the latter by left and top margins.
 var chartGroup = svg.append("g")
@@ -25,6 +25,7 @@ var chartGroup = svg.append("g")
 
 // Read in data file using D3
 d3.csv("data.csv").then(function (stateData) {
+    console.log(stateData)
     // Parse Data as numbers
     stateData.forEach(function (data) {
         data.poverty = +data.poverty;
@@ -33,11 +34,11 @@ d3.csv("data.csv").then(function (stateData) {
 
     // Create scale functions
     var xLinearScale = d3.scaleLinear()
-        .domain([20, d3.max(stateData, d => d.poverty)])
+        .domain([8.5, d3.max(stateData, d => d.poverty)])
         .range([0, width]);
 
     var yLinearScale = d3.scaleLinear()
-        .domain([0, d3.max(stateData, d => d.healthcare)])
+        .domain([3.5, d3.max(stateData, d => d.healthcare)])
         .range([height, 0]);
 
     // Create axis functions
@@ -45,7 +46,7 @@ d3.csv("data.csv").then(function (stateData) {
     var leftAxis = d3.axisLeft(yLinearScale);
 
     // Append Axes to the chart
-    chartGroup.append("#scatter")
+    chartGroup.append("g")
         .attr("transform", `translate(0, ${height})`)
         .call(bottomAxis);
 
@@ -65,17 +66,17 @@ d3.csv("data.csv").then(function (stateData) {
 
     // Initialize tooltip
     var toolTip = d3.tip()
-        .attr("class", "tooltip")
+        .attr("class", "d3-tip")
         .offset([80, -60])
         .html(function(d) {
-         return (`${d.state}<br> In Poverty: ${d.poverty}%<br>Lack Access: ${d.num_hits}%`);
+         return (`${d.state}<br> In Poverty: ${d.poverty}%<br>Lack Access: ${d.healthcare}%`);
         });
 
     // Create tooltip in the chart
     chartGroup.call(toolTip);
 
     // Create event listeners to display and hide the tooltip
-    circlesGroup.on("click", function(data) {
+    circlesGroup.on("mouseover", function(data) {
         toolTip.show(data, this);
       })
         // onmouseout event
